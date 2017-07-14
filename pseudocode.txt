@@ -1,0 +1,102 @@
+1-4-24 Dice Game Pseudocode
+
+-Welcome Statement & Game Rules/Requirements (2 players - maybe add ability for 1 player vs computer and more than 2 players later)
+
+-Ask players if they would like to play
+	*if “No”, exit program
+
+-If Yes, ask for:
+	Player 1 (P1) Name
+	P1 $ (“How many dollars do you have in your pocket?”)
+	Player 2 (P2) Name
+	P2 $
+
+-Add user input for $ to P1 and P2 “pocket”(s), respectively
+
+-Remove $1 from each players pocket and place it in the “pot”
+
+-Statement letting players know they have each put $1 in the pot
+
+-Ask if ready to begin
+	*if “No”, print message “You snooze, you lose - your $1 is forfeit” or something, 	exit program
+
+-Display reminder hint regarding the requirement to keep at least one 1 and one 4
+
+-P1 Roll
+	Display P1 dice
+	Ask P1 which di/dice they want to keep
+	P1 roll remaining dice
+	Repeat until all 6 dice are “kept”
+
+-P1 Requirement check (check to ensure there is at least one 1 and one 4 - if not, P1 “Bust”/loses
+
+-P2 Roll
+	Display P2 dice
+	Ask P1 which di/dice they want to keep
+	P1 roll remaining dice
+	Repeat until all 6 dice are “kept”
+
+-P2 Requirement check (check to ensure there is at least one 1 and one 4 - if not, P1 “Bust”/loses
+
+If neither player “bust”:
+
+-Calculate P1 Total (dice total -5)
+
+-Calculate P2 Total (dice total -5)
+
+-Compare P1 Total and P2 Total
+	if P1 Total > P2 Total, P1 = Winner
+	if P2 Total > P1 Total, P2 = Winner
+	if P1 Total == P2 Total, Tie
+		*if Tie:
+		-pot remains
+		-another $1 is removed from each player’s pocket and added to pot
+		-rolls start over
+
+-Add pot $ to winner’s pocket
+
+-Display winner message with dice totals, pot prize and new pocket amounts
+
+-Ask if they would like to play again
+	if “No”, exit program
+	if “Yes”, repeat game
+
+————————————————————————————————————————————————————————————————
+
+Variables:
+
+p1_name
+p2_name
+p1_pocket
+p2_pocket
+pot
+p1_tot
+p2_tot
+
+Lists:
+
+p1_roll[]
+p2_roll[]
+p1_keep[]
+p2_keep[]
+
+Functions:
+
+print_welcome()
+print_rules_req()
+p1_info()
+	p1_name()
+	p1_pocket()
+p2_info()
+	p2_name()
+	p2_pocket()
+play_game(p1_name, p1_pocket, p2_name, p2_pocket)
+	pot_ante(p1_pocket, p1_pocket, pot)
+	roll(p_roll, p_keep)
+	requirement_check(p_tot)
+	calculate_winner(p1_tot, p2_tot)
+		print_winner_statement(p1_tot, p2_tot)
+		OR
+		print_tie_statement
+
+
