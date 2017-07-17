@@ -95,13 +95,16 @@ get_p2_info()
 check_players_ready(p1_pocket, p2_pocket) *needs to be in while loop
 play_game(p1_name, p1_pocket, p2_name, p2_pocket)
 	pot_ante(p1_pocket, p1_pocket, pot)
-	roll(p_roll, p_keep) *p1 while loop (conditional to p_keep[] len)
-	requirement_check(p_tot)
+	roll_dice(p_keep) *p1 while loop (conditional to p_keep[] len)
+	keep_dice(p_roll) *p1 while loop (conditional to keep_more, p_roll[] len)
+	req_check_total(p_keep)
 	roll(p_roll, p_keep) *p2 while loop (conditional to p_keep[] len)
-	requirement_check(p_tot)
+	keep_dice(p_roll) *p2 while loop (conditional to keep_more, p_roll[] len)
+	req_check_total(p_keep)
 	calculate_winner(p1_tot, p2_tot)
-		print_winner_statement(p1_tot, p2_tot)
-		OR
-		print_tie_statement
+		print_winner(p1_name,p1_tot,p1_pocket,p2_name,p2_tot,p2_pocket,winner)
+	play_again_ask(winner)
+
+
 
 
