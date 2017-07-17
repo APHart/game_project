@@ -13,12 +13,13 @@
 
 -Add user input for $ to P1 and P2 “pocket”(s), respectively
 
+-Ask if ready to begin
+	*if “No”, print message “You snooze, you lose - $1 has been removed from each of your pockets for the bother.” or something, display new pocket amounts, 
+	exit program
+
 -Remove $1 from each players pocket and place it in the “pot”
 
 -Statement letting players know they have each put $1 in the pot
-
--Ask if ready to begin
-	*if “No”, print message “You snooze, you lose - your $1 is forfeit” or something, 	exit program
 
 -Display reminder hint regarding the requirement to keep at least one 1 and one 4
 
@@ -84,15 +85,19 @@ Functions:
 
 print_welcome()
 print_rules_req()
-p1_info()
+return_play_ask()
+get_p1_info()
 	p1_name()
 	p1_pocket()
-p2_info()
+get_p2_info()
 	p2_name()
 	p2_pocket()
+check_players_ready(p1_pocket, p2_pocket) *needs to be in while loop
 play_game(p1_name, p1_pocket, p2_name, p2_pocket)
 	pot_ante(p1_pocket, p1_pocket, pot)
-	roll(p_roll, p_keep)
+	roll(p_roll, p_keep) *p1 while loop (conditional to p_keep[] len)
+	requirement_check(p_tot)
+	roll(p_roll, p_keep) *p2 while loop (conditional to p_keep[] len)
 	requirement_check(p_tot)
 	calculate_winner(p1_tot, p2_tot)
 		print_winner_statement(p1_tot, p2_tot)
