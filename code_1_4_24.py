@@ -120,36 +120,26 @@ def roll_dice(p_keep, p_roll):
 
 
 def keep_dice(p_keep, p_roll):
+    """Keeps dice from the roll per player's input, returns kept dice"""
 
-    keep_more = True
+    for num in range(len(p_roll)):
+        print "{}. {}".format(num, p_roll[num])
 
-    while keep_more:
+    print
 
-        for die in range(len(p_roll)):
-            print "{}. {}".format(die, p_roll[die])
+    user_keep = raw_input("""Enter the number of the die/dice you would 
+like to keep, separated by a comma 
+(remember that you must keep at least one): """)
 
-        user_keep = raw_input("Enter a die you would like to keep: ")
-        user_keep = int(user_keep)
+    user_keep = user_keep.strip()
+    user_keep = user_keep.split(",") 
 
-        p_keep.append(p_roll[user_keep])
-        p_roll.pop(user_keep)
+    for die in user_keep:
 
-        if len(p_roll) > 0:
+        die = int(die)
 
-            more_dice = raw_input("Would you like to keep another die (Y/N)? ")
-            more_dice = more_dice.upper()
-
-            if more_dice == "Y":
-                keep_more = True
-
-            elif more_dice == "N":
-                keep_more = False
-
-            else:
-                print "That is not a valid response."
-
-        else:
-            keep_more = False
+        p_keep.append(p_roll[die])
+        p_roll.pop(die)
 
     return p_keep
 
@@ -251,11 +241,15 @@ def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
 
         if ready_response == "EXIT":
 
+            print
+
             print "Good Bye"
 
             playing = False
 
         elif ready_response == "N":
+
+            print
 
             print """Okay, but we're keeping your money from the pot for ice cream :p
 
@@ -266,19 +260,26 @@ def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
 
         elif ready_response == "Y":
 
+            print
+
             print "{}'s turn!".format(p1_name)
 
             while len(p1_keep) < 6:
 
                 p1_roll = roll_dice(p1_keep, p1_roll)
 
-                print "Here are the numbers that you rolled:"
+                print
 
-                print p1_roll
+                print "Here are the numbers that you rolled:"
 
                 p1_keep = keep_dice(p1_keep, p1_roll)
 
+            print
+
             print "Your turn is complete!"
+
+            print
+            print
 
             print "{}'s turn!".format(p2_name)
 
@@ -288,11 +289,14 @@ def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
 
                 print "Here are the numbers that you rolled:"
 
-                print p2_roll
-
                 p2_keep = keep_dice(p2_keep, p2_roll)
 
+            print
+
             print "Your turn is complete!"
+
+            print
+            print
 
             p1_tot = req_check_and_total(p1_keep)
 
@@ -316,18 +320,25 @@ def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
                 p2_pocket = p2_pocket + pot
                 pot = 0
 
+            print
+
             print_winner(p1_name,p1_tot,p2_name,p2_tot,winner,p1_pocket,p2_pocket)
+
+            print
 
             play_again = play_again_ask(winner)
 
             if play_again == "Y":
+                print
                 print "Great!"
 
             elif play_again == "N" and winner == "Tie":
+                print
                 print "Okay, but we're keeping your money from the pot for ice cream :p"
                 playing = False
 
             elif play_again == "N":
+                print
                 print "Thanks for playing!"
                 playing = False
 
@@ -337,6 +348,8 @@ print_welcome()
 
 print_rules()
 
+print
+
 user_play = get_play_ask()
 
 if user_play == "N":
@@ -345,15 +358,25 @@ if user_play == "N":
 
 elif user_play == "Y":
 
+    print
+
     p1_name = get_p1_name()
+
+    print
 
     p1_pocket = get_p1_pocket()
 
+    print
+
     p2_name = get_p2_name()
+
+    print
 
     p2_pocket = get_p2_pocket()
 
     pot = 0
+
+    print
 
     play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot)
 
