@@ -5,12 +5,14 @@ import random
 def print_welcome():
     """Prints welcome statement and game rules and requirements"""
 
+    print
     print """Welcome to the 1-4-24 Dice Game!"""
 
     
 def print_rules():
     """Prints game rules and requirements"""    
 
+    print
     print """This game requires two players, the rules are below:
 
     Goal: With six dice, obtain a 1 and a 4 and get the highest score possible 
@@ -46,6 +48,11 @@ def get_p1_name():
     """Returns Player 1 name"""
 
     p1_name = raw_input("Please enter Player 1 name: ")
+
+    if len(p1_name) < 1:
+        
+        p1_name = "No Name"
+
     p1_name = p1_name.title()
 
     return p1_name
@@ -53,27 +60,70 @@ def get_p1_name():
 
 def get_p1_pocket():
     """Returns the dollar amount in Player 1's pocket"""
+    
+    invalid = True
 
-    p1_pocket = raw_input("How many dollars do you have in your pocket?: ")
-    p1_pocket = int(p1_pocket)
+    while invalid:
+
+        p1_pocket = raw_input("How many dollars do you have in your pocket?: ")
+
+        if p1_pocket.isdigit() == True:
+
+            p1_pocket = int(p1_pocket)
+
+            invalid = False
+
+        else:
+
+            print
+            print "That is not a valid response."
+            print
 
     return p1_pocket
 
 
-def get_p2_name():
+def get_p2_name(p1_name):
     """Returns Player 2 name"""
 
     p2_name = raw_input("Please enter Player 2 name: ")
+
+    if len(p2_name) < 1:
+
+        if p1_name == "No Name":
+
+            p1_name = "No Name #1"
+
+            p2_name = "No Name #2"
+
+        else:
+
+            p2_name = "No Name"
+
     p2_name = p2_name.title()
 
-    return p2_name
+    return [p2_name, p1_name]
 
 
 def get_p2_pocket():
     """Returns the dollar amount in Player 2's pocket"""
 
-    p2_pocket = raw_input("How many dollars do you have in your pocket?: ")
-    p2_pocket = int(p2_pocket)
+    invalid = True
+
+    while invalid:
+
+        p2_pocket = raw_input("How many dollars do you have in your pocket?: ")
+
+        if p2_pocket.isdigit() == True:
+
+            p2_pocket = int(p2_pocket)
+
+            invalid = False
+
+        else:
+
+            print
+            print "That is not a valid response."
+            print
 
     return p2_pocket
 
@@ -81,16 +131,21 @@ def get_p2_pocket():
 def check_players_ready():
     """Asks if players are ready to begin, returns user response"""
 
-    ready_play = raw_input("Are you ready to begin? (Y/N/Exit): ")
-    ready_play = ready_play.upper()
+    invalid = True
 
-    if ready_play == "N" or "Y" or "EXIT":
+    while invalid:
 
-        return ready_play
+        ready_play = raw_input("Are you ready to begin? (Y/N/Exit): ")
+        ready_play = ready_play.upper()
 
-    else:
-        print "That is not a valid response."
+        if ready_play == "N" or ready_play == "Y" or ready_play == "EXIT":
+            invalid = False
 
+        else:
+            print "That is not a valid response."
+            print
+
+    return ready_play
 
 def pot_ante(pocket1, pocket2, pot):
     """Removes $1 ante from each pocket and places it in the pot, returns 
@@ -123,23 +178,33 @@ def keep_dice(p_keep, p_roll):
     """Keeps dice from the roll per player's input, returns kept dice"""
 
     for num in range(len(p_roll)):
-        print "{}. {}".format(num, p_roll[num])
+        print "{}. {}".format((num + 1), p_roll[(num)])
 
     print
 
-    user_keep = raw_input("""Enter the number of the die/dice you would 
+    user_keep = raw_input("""Enter the number of the die/dice you would
 like to keep, separated by a comma 
 (remember that you must keep at least one): """)
 
     user_keep = user_keep.strip()
-    user_keep = user_keep.split(",") 
+    user_keep = user_keep.split(",")
+    user_keep = [int(x) for x in user_keep]
 
     for die in user_keep:
 
-        die = int(die)
+        p_keep.append(p_roll[(die - 1)])
+    
+    user_keep.sort(reverse=True)
 
-        p_keep.append(p_roll[die])
-        p_roll.pop(die)
+    for die in user_keep:
+
+        p_roll.pop((die - 1))
+
+    if len(p_keep) < 6:
+
+        print 
+        print "Here are the dice that you have kept thus far: {}".format(p_keep)
+        print
 
     return p_keep
 
@@ -160,17 +225,20 @@ def req_check_and_total(p_keep):
 def calculate_winner(p1_tot,p2_tot):
     """Calculates the winner of the game, returns winner (or tie)"""
 
-    if p1_tot > p2_tot:
+    if p1_tot > p2_tot and p2_tot != 0:
         winner = "p1"
 
-    elif p1_tot > 0 and p2_tot == 0:
+    elif p1_tot != 0 and p2_tot == 0:
         winner = "p1-p2 bust"
 
-    elif p2_tot > p1_tot:
+    elif p2_tot > p1_tot and p1_tot != 0:
         winner = "p2"
 
-    elif p2_tot > 0 and p1_tot == 0:
+    elif p2_tot != 0 and p1_tot == 0:
         winner = "p2-p1 bust"
+
+    elif p1_tot == 0 and p2_tot == 0:
+        winner = "both bust"
 
     else:
         winner = "Tie"
@@ -178,34 +246,44 @@ def calculate_winner(p1_tot,p2_tot):
     return winner
 
 
-def print_winner(p1_name,p1_tot,p2_name,p2_tot,winner,p1_pocket,p2_pocket):
+def print_winner(p1_name,p1_tot,p1_keep,p2_name,p2_tot,p2_keep,winner,p1_pocket,p2_pocket):
     """Prints the winner, their total, and pocket amount OR prints Tie 
     statement"""
 
-    if winner == "p1":
-        print """Congratulations {}, you are the winner! Your dice total was {}, 
-        beating {}'s {}. The pot is yours and you now have {} dollars in your 
-        pocket.""".format(p1_name, p1_tot, p2_name, p2_tot, p1_pocket)
+    print "{}'s dice: {}".format(p1_name, p1_keep)
+    print
+    print "{}'s dice: {}".format(p2_name, p2_keep)
+    print
 
-    elif winner == "p1-p2 bust":
-        print """Congratulations {}, you are the winner! Your dice total was {}, 
-        and {} did not qualify as they did not keep a 1 and a 4. The pot is 
-        yours and you now have {} dollars in your pocket.""".format(p1_name, p1_tot, p2_name, p1_pocket)
+    if winner == "p1":
+        print """Congratulations {}, you are the winner! Your dice total was {},
+ beating {}'s {}. The pot is yours and you now have {} dollars in
+ your pocket.""".format(p1_name, p1_tot, p2_name, p2_tot, p1_pocket)
+
+    elif winner == "p1-p2 bust": 
+        print """Congratulations {}, you are the winner! Your dice total was {},
+and {} did not qualify (failed to keep a 1 and a 4). The pot
+is yours and you now have {} dollars in your pocket.""".format(p1_name, p1_tot, p2_name, p1_pocket)
 
     elif winner == "p2":
-        print """Congratulations {}, you are the winner! Your dice total was {}, 
-        beating {}'s {}. The pot is yours and you now have {} dollars in your 
-        pocket.""".format(p2_name, p2_tot, p1_name, p1_tot, p2_pocket)
+        print """Congratulations {}, you are the winner! Your dice total was {},
+eating {}'s {}. The pot is yours and you now have {} dollars in
+your pocket.""".format(p2_name, p2_tot, p1_name, p1_tot, p2_pocket)
 
     elif winner == "p2-p1 bust":
-        print """Congratulations {}, you are the winner! Your dice total was {}, 
-        and {} did not qualify as they did not keep a 1 and a 4. The pot is 
-        yours and you now have {} dollars in your pocket.""".format(p2_name, p2_tot, p1_name, p2_pocket)
+        print """Congratulations {}, you are the winner! Your dice total was {},
+and {} did not qualify (failed to keep a 1 and a 4). The pot
+is yours and you now have {} dollars in your pocket.""".format(p2_name, p2_tot, p1_name, p2_pocket)
+
+    elif winner == "both bust":
+        print "Neither of you qualified, you both failed to keep a 1 and a 4! The "
+        print "money placed in the pot will remain, and another game will need "
+        print "to be played in order for the pot to be claimed."
 
     elif winner == "Tie":
-        print """It's a tie! You both had a dice total of {}. The money placed 
-        in the pot will remain, and another game will need to be played in order
-        for the pot to be claimed.""".format(p1_tot)
+        print """It's a tie! You both had a dice total of {}. The money placed in
+the pot will remain, and another game will need to be played in
+order for the pot to be claimed.""".format(p1_tot)
 
 def play_again_ask(winner):
     """Asks users if they would like to play again, continues or exits based on 
@@ -219,15 +297,15 @@ def play_again_ask(winner):
 
 def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
     """Plays a 2 player game of 1-4-24"""
-
-    p1_roll = []
-    p1_keep = []
-    p2_roll = []
-    p2_keep = []
-    
+  
     playing = True
 
     while playing:
+
+        p1_roll = []
+        p1_keep = []
+        p2_roll = []
+        p2_keep = []
 
         ante = pot_ante(p1_pocket, p2_pocket, pot)
 
@@ -242,7 +320,6 @@ def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
         if ready_response == "EXIT":
 
             print
-
             print "Good Bye"
 
             playing = False
@@ -250,7 +327,6 @@ def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
         elif ready_response == "N":
 
             print
-
             print """Okay, but we're keeping your money from the pot for ice cream :p
 
                      {} now has {} in thier pocket
@@ -261,7 +337,6 @@ def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
         elif ready_response == "Y":
 
             print
-
             print "{}'s turn!".format(p1_name)
 
             while len(p1_keep) < 6:
@@ -269,15 +344,13 @@ def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
                 p1_roll = roll_dice(p1_keep, p1_roll)
 
                 print
-
                 print "Here are the numbers that you rolled:"
+                print
 
                 p1_keep = keep_dice(p1_keep, p1_roll)
 
             print
-
             print "Your turn is complete!"
-
             print
             print
 
@@ -288,13 +361,12 @@ def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
                 p2_roll = roll_dice(p2_keep, p2_roll)
 
                 print "Here are the numbers that you rolled:"
+                print
 
                 p2_keep = keep_dice(p2_keep, p2_roll)
 
             print
-
             print "Your turn is complete!"
-
             print
             print
 
@@ -322,7 +394,7 @@ def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
 
             print
 
-            print_winner(p1_name,p1_tot,p2_name,p2_tot,winner,p1_pocket,p2_pocket)
+            print_winner(p1_name,p1_tot,p1_keep,p2_name,p2_tot,p2_keep,winner,p1_pocket,p2_pocket)
 
             print
 
@@ -368,7 +440,13 @@ elif user_play == "Y":
 
     print
 
-    p2_name = get_p2_name()
+    p2_name = get_p2_name(p1_name)
+
+    if len(p2_name) > 1:
+
+        p1_name = p2_name[1]
+
+    p2_name = p2_name[0]
 
     print
 
