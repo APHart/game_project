@@ -48,6 +48,7 @@ def get_p1_name():
         
         p1_name = "No Name"
 
+    p1_name = p1_name.strip()
     p1_name = p1_name.title()
 
     return p1_name
@@ -94,6 +95,7 @@ def get_p2_name(p1_name):
 
             p2_name = "No Name"
 
+    p2_name = p2_name.strip()
     p2_name = p2_name.title()
 
     return [p2_name, p1_name]
@@ -334,9 +336,10 @@ def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
             print
             print """Okay, but we're keeping your money from the pot for ice cream :p
 
-                     {} now has {} in thier pocket
-                     {} now has {} in their pocket""".format(p1_name, p1_pocket, p2_name, p2_pocket)
-        
+            {} now has {} in thier pocket
+            {} now has {} in their pocket""".format(p1_name, p1_pocket, p2_name, p2_pocket)
+            print
+            
             playing = False
 
         elif ready_response == "Y":
