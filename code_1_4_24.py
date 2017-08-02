@@ -2,16 +2,11 @@
 
 import random
 
-def print_welcome():
+def print_welcome_and_rules():
     """Prints welcome statement and game rules and requirements"""
 
     print
-    print """Welcome to the 1-4-24 Dice Game!"""
-
-    
-def print_rules():
-    """Prints game rules and requirements"""    
-
+    print """Welcome to the 1-4-24 Dice Game!""" 
     print
     print """This game requires two players, the rules are below:
 
@@ -20,18 +15,18 @@ def print_rules():
 
     Play: Each player must bet/ante $1 dollar which goes into the pot.
 
-          Player begins by rolling all six dice. After each roll theplayer is 
+          Player begins by rolling all six dice. After each roll, the player is 
           required to keep at least one die and re-roll the reamining. Once a 
-          die, or dice, are kept you can no longer roll it. A turn ends when 
+          die (or dice) is kept, you can no longer roll it. A turn ends when 
           all dice have been held/kept.
 
           A player must keep a 1 and a 4 or else they are disqualified. The 
           remaining four dice are totaled, the maximum score for a turn is 24.
 
-          The winner is the player with the highes score wins the pot. There 
-          must be one distinct winner. If there is a tie, each player puts 
+          The winner is the player with the highest score and they win the pot. 
+          There must be one distinct winner. If there is a tie, each player puts 
           another $1 in the pot and a new game is started. This continues until
-          ther is one distinct winner, that player collects all the money from
+          there is one distinct winner; that player collects all the money from
           the pot."""
 
 
@@ -131,6 +126,10 @@ def get_p2_pocket():
 def check_players_ready():
     """Asks if players are ready to begin, returns user response"""
 
+    print
+    print "$1 from each of your pockets has been placed in the pot."
+    print
+
     invalid = True
 
     while invalid:
@@ -178,15 +177,20 @@ def keep_dice(p_keep, p_roll):
     """Keeps dice from the roll per player's input, returns kept dice"""
 
     for num in range(len(p_roll)):
-        print "{}. {}".format((num + 1), p_roll[(num)])
+        print "D#{}. {}".format((num + 1), p_roll[(num)])
 
     print
 
-    user_keep = raw_input("""Enter the number of the die/dice you would
+    user_keep = raw_input("""Enter the number (D#) of the die/dice you would
 like to keep, separated by a comma 
 (remember that you must keep at least one): """)
 
     user_keep = user_keep.strip()
+
+    if user_keep[(len(user_keep) - 1)] == ",":
+
+        user_keep = user_keep[: - 1]
+
     user_keep = user_keep.split(",")
     user_keep = [int(x) for x in user_keep]
 
@@ -202,6 +206,7 @@ like to keep, separated by a comma
 
     if len(p_keep) < 6:
 
+        print
         print 
         print "Here are the dice that you have kept thus far: {}".format(p_keep)
         print
@@ -267,7 +272,7 @@ is yours and you now have {} dollars in your pocket.""".format(p1_name, p1_tot, 
 
     elif winner == "p2":
         print """Congratulations {}, you are the winner! Your dice total was {},
-eating {}'s {}. The pot is yours and you now have {} dollars in
+beating {}'s {}. The pot is yours and you now have {} dollars in
 your pocket.""".format(p2_name, p2_tot, p1_name, p1_tot, p2_pocket)
 
     elif winner == "p2-p1 bust":
@@ -276,9 +281,9 @@ and {} did not qualify (failed to keep a 1 and a 4). The pot
 is yours and you now have {} dollars in your pocket.""".format(p2_name, p2_tot, p1_name, p2_pocket)
 
     elif winner == "both bust":
-        print "Neither of you qualified, you both failed to keep a 1 and a 4! The "
-        print "money placed in the pot will remain, and another game will need "
-        print "to be played in order for the pot to be claimed."
+        print """Neither of you qualified, you both failed to keep a 1 and a 4! 
+The money placed in the pot will remain, and another game will need to be played
+in order for the pot to be claimed."""
 
     elif winner == "Tie":
         print """It's a tie! You both had a dice total of {}. The money placed in
@@ -336,6 +341,7 @@ def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
 
         elif ready_response == "Y":
 
+            print
             print
             print "{}'s turn!".format(p1_name)
 
@@ -416,9 +422,7 @@ def play_game(p1_name, p1_pocket, p2_name, p2_pocket, pot):
 
 
 
-print_welcome()
-
-print_rules()
+print_welcome_and_rules()
 
 print
 
